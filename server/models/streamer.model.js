@@ -9,6 +9,4 @@ const StreamerSchema = new mongoose.Schema({
     updateTimestamp: { type: Date, default: Date.now() },
 });
 
-const StreamerModel = mongoose.model('c_streamers', StreamerSchema);
-
-module.exports = StreamerModel;
+module.exports = StreamerModel = mongoose.model('c_streamers', StreamerSchema);

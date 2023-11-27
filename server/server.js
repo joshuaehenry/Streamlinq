@@ -1,13 +1,16 @@
 const express = require('express');
-const { DBConnection } = require('./database/database');
+const { DBConnection } = require ('./database/database');
+
 require('dotenv').config();
 const port = process.env.PORT || 8080;
 const app = express();
 
 const userRoutes = require('./routes/user.routes');
 const streamerRoutes = require('./routes/streamer.routes');
+const authRoutes = require('./routes/auth.routes');
 
 app.use(express.json());
+app.use('/', authRoutes);
 app.use('/user', userRoutes);
 app.use('/streamer', streamerRoutes);
 

@@ -4,10 +4,6 @@ const StreamerController = require('../controllers/streamer.controller');
 
 router.get('/list', StreamerController.getList)
 
-.get('/', function(getStreamers, res) {
-
-})
-
 .get('/:id', function(req, res) {
     /* Get streamer by id. */
     res.send(`This is ID: ${req.params.id}`)
@@ -23,6 +19,8 @@ router.get('/list', StreamerController.getList)
 
 .post('/new', function(req, res) {
     /* Create a new streamer. */
-});
+})
+
+.put('/', StreamerController.test);
 
 module.exports = router;
