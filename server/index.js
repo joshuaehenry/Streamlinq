@@ -1,7 +1,7 @@
-const config = require('./common/global.config');
 const express = require('express');
-const connectToDB = require('./database/database');
-
+const { DBConnection } = require('./database/database');
+require('dotenv').config();
+const port = process.env.PORT || 8080;
 const app = express();
 
 const userRoutes = require('./routes/user.routes');
@@ -11,11 +11,11 @@ app.use(express.json());
 app.use('/user', userRoutes);
 app.use('/streamer', streamerRoutes);
 
-app.listen(config.port, (err) => {
+app.listen(port, (err) => {
     if (!err)
-        console.log(`Server is listening on port ${config.port}.`);
+        console.log(`Server is listening on port ${port}.`);
     else
         console.log(`An error has occured when running the server: ${err}.`);
 });
 
-connectToDB();
+DBConnection.open();

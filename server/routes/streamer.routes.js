@@ -1,12 +1,16 @@
 const express = require('express');
 const router = express.Router();
+const StreamerController = require('../controllers/streamer.controller');
 
-router.get('/list', function(req, res) {
-    /* List streamers. */
+router.get('/list', StreamerController.getList)
+
+.get('/', function(getStreamers, res) {
+
 })
 
 .get('/:id', function(req, res) {
     /* Get streamer by id. */
+    res.send(`This is ID: ${req.params.id}`)
 })
 
 .patch('/:id', function(req, res) {
