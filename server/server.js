@@ -1,4 +1,6 @@
 const express = require('express');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const { DBConnection } = require ('./database/database');
 
 require('dotenv').config();
@@ -9,6 +11,9 @@ const userRoutes = require('./routes/user.routes');
 const streamerRoutes = require('./routes/streamer.routes');
 const authRoutes = require('./routes/auth.routes');
 
+app.use(cors());
+app.disable("x-powered-by");
+app.use(cookieParser());
 app.use(express.json());
 app.use('/', authRoutes);
 app.use('/user', userRoutes);

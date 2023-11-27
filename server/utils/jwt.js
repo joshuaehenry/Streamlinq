@@ -15,14 +15,4 @@ const generateToken = (user) => {
     return jwt.sign(payload, process.env.JWT_SECRET, options);
 };
 
-const verifyToken = (token) => {
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        return decoded;
-    } catch (err) {
-        console.error(`Error while verifying json web token: ${err}.`);
-        return null;
-    }
-}
-
-module.exports = { generateToken, verifyToken };
+module.exports = { generateToken };

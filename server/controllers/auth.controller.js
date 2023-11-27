@@ -1,11 +1,18 @@
 const UserModel = require('../models/user.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { generateToken, verifyToken } = require('../utils/jwt');
+const { generateToken } = require('../utils/jwt');
+const { verifyToken, invalidatedTokens } = require('../middleware/auth');
 
 require('dotenv').config();
 
 const AuthController = {
+    logout: async (req, res) => {
+        const token = req.cookies.access_token;
+        invalidatedTokens.add(token);
+        console.log(invalidatedTokens);
+        res.json({ message: 'Logout successful.' });
+    },
     login: async (req, res) => {
         try {
             const user = req.body;
@@ -16,6 +23,8 @@ const AuthController = {
             }
             
             const token = generateToken(user);
+
+            res.cookie('access_token', token, { httpOnly:true, secure: process.env.ENVIRONMENT==='PROD' });
             res.status(200).json({ message: 'User logged in successfully.', token: token });
         } catch (err) {
             console.error(err);
@@ -38,6 +47,7 @@ const AuthController = {
                 });
                 newUser.save();
                 const token = generateToken(newUser);
+                res.cookie('access_token', token, { httpOnly:true, secure: process.env.ENVIRONMENT==='PROD' });
                 res.status(201).json({ message: `User '${newUser.username}' successfully registered.`, token: token });
             }
         } catch (err) {
