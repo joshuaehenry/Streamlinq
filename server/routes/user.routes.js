@@ -12,6 +12,6 @@ router.get('/list', function(req, res) {
     /* Delete the user with the given id. */
 })
 
-.patch('/:id', UserController.updateUser);
+.patch('/', UserController.updateUser);
 
 module.exports = router;

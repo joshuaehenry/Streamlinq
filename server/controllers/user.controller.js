@@ -1,15 +1,19 @@
 const UserModel = require('../models/user.model');
-const { verifyToken } = require('../middleware/auth');
+const { verifyToken } = require('../middleware/auth.middleware');
 
 const UserController = {
-    updateUser: async (req, res) => {
+    updateUser: async (req, res, next) => {
         try {
-            const token = req.cookies.access_token;
             verifyToken(req, res);
             const user = req.user;
+
+            if (!user) {
+                return res;
+            }
+            console.log(user);
             const existingData = await UserModel.findOne({ email: user.email});
             
-            const filter = { _id: existingData._id };
+            const filter = { _id: existingData.id };
             const update = {
                 $set: {
                     username: user.username,
@@ -19,17 +23,19 @@ const UserController = {
 
             UserModel.updateOne(filter, update)
             .then(result => {
+                console.log("we're in .then");
                 res.status(201).json({ message: `User was successfully updated!` });
             })
             .catch(err => {
-                res.status(500).json({ message: `Error when updating user: ${err}` });
+                console.log("we're in mongo err");
+                next(err);
             });
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ message: `Server error: ${err}` });
+            console.log(`we're in outer ex: ${err}`);
+            next(err);
         }
     },
-    getUser: async (req, res) => {
+    getUser: async (req, res, next) => {
         try {
             const id = req.query.id;
             const email = req.query.email;
@@ -52,7 +58,7 @@ const UserController = {
                 res.status(200).json(existingUser);
             }
         } catch (err) {
-            res.status(500).json( { message: `Error while querying user: ${err}` });
+            next(err);
         }
     }
 }

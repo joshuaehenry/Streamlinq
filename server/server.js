@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const errorMiddleware = require('./middleware/error.middleware');
 const { DBConnection } = require ('./database/database');
 
 require('dotenv').config();
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use('/', authRoutes);
 app.use('/user', userRoutes);
 app.use('/streamer', streamerRoutes);
+app.use(errorMiddleware);
 
 app.listen(port, (err) => {
     if (!err)
