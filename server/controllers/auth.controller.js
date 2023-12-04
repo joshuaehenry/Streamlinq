@@ -2,7 +2,7 @@ const UserModel = require('../models/user.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { generateToken } = require('../utils/jwt');
-const { verifyToken, invalidatedTokens } = require('../middleware/auth.middleware');
+const { verifyToken, invalidatedTokens, destroyToken } = require('../middleware/auth.middleware');
 
 require('dotenv').config();
 
@@ -10,7 +10,7 @@ const AuthController = {
     logout: async (req, res) => {
         const token = req.cookies.access_token;
         invalidatedTokens.add(token);
-        console.log(invalidatedTokens);
+        destroyToken(req, res);
         res.json({ message: 'Logout successful.' });
     },
     login: async (req, res) => {
