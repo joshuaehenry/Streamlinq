@@ -1,30 +1,32 @@
 const UserModel = require('../models/user.model');
 const { verifyToken } = require('../middleware/auth.middleware');
+const { ObjectId } = require('mongodb');
 
 const UserController = {
     updateUser: async (req, res, next) => {
         try {
+            const { username, email, role } = req.body;
             verifyToken(req, res);
             const user = req.user;
-
+            
             if (!user) {
                 return res;
             }
             console.log(user);
             const existingData = await UserModel.findOne({ email: user.email.toUpperCase() });
             console.log(existingData);
-
-            const filter = { _id: existingData.id };
+            const filter = { _id: new ObjectId(existingData._id) };
             const update = {
                 $set: {
-                    username: user.username,
+                    username: username.toUpperCase(),
+                    email: email.toUpperCase(),
+                    role: role,
                     update_timestamp: Date.now()
                 },
             };
 
             UserModel.updateOne(filter, update)
             .then(result => {
-                console.log("we're in .then");
                 res.status(201).json({ message: `User was successfully updated!` });
             })
             .catch(err => {

@@ -19,8 +19,18 @@ const verifyToken = (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
     } catch (err) {  
-        next(err);
+        destroyToken(req, res, next);
+        if (err instanceof jwt.TokenExpiredError) {
+            res.status(401).json({ message: 'Token has expired.'});
+            // TODO: Redirect to login.
+            return;
+        }
+        res.status(500).json({ message: `Error while verifying token: ${err}.`});   
     }
-}
+};
 
-module.exports = { verifyToken, invalidatedTokens };
+const destroyToken = (req, res, next) => {
+    res.cookie('access_token', '', { httpOnly:true, secure: process.env.ENVIRONMENT==='PROD', maxAge: 0 });
+};
+
+module.exports = { verifyToken, invalidatedTokens, destroyToken };
