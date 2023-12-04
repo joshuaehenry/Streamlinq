@@ -11,8 +11,9 @@ const UserController = {
                 return res;
             }
             console.log(user);
-            const existingData = await UserModel.findOne({ email: user.email});
-            
+            const existingData = await UserModel.findOne({ email: user.email.toUpperCase() });
+            console.log(existingData);
+
             const filter = { _id: existingData.id };
             const update = {
                 $set: {

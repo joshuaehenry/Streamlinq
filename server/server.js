@@ -5,7 +5,7 @@ const errorMiddleware = require('./middleware/error.middleware');
 const { DBConnection } = require ('./database/database');
 
 require('dotenv').config();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8000;
 const app = express();
 
 const userRoutes = require('./routes/user.routes');
