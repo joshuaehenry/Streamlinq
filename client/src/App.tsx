@@ -1,6 +1,5 @@
 import './App.css';
 import NavigationBar from './components/navigationbar';
-import LoginForm from './components/login';
 
 function App() {
   return (
@@ -9,7 +8,6 @@ function App() {
       flexDirection: 'column'
     }}>
       <NavigationBar />
-      <LoginForm className="content"/>
     </div>
   );
 }

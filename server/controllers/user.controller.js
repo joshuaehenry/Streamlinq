@@ -28,13 +28,8 @@ const UserController = {
             UserModel.updateOne(filter, update)
             .then(result => {
                 res.status(201).json({ message: `User was successfully updated!` });
-            })
-            .catch(err => {
-                console.log("we're in mongo err");
-                next(err);
             });
         } catch (err) {
-            console.log(`we're in outer ex: ${err}`);
             next(err);
         }
     },
