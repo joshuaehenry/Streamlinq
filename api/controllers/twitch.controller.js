@@ -25,24 +25,23 @@ axios.post(process.env.TWITCH_OAUTH_URI, {
 });
 
 const TwitchController = {
-    getList: async (req, res) => {
+    getSortedStreams: async (req, res) => {
         const params = {
             'sort': 'viewers',
         };
 
         const endpoint = apiUrl + process.env.TWITCH_STREAMS_RESOURCE;
 
-        try {
-            axios.get(endpoint, { headers, params })
-            .then(response => {
-                const data = response.data;
-                const streams = data.data || [];
+        axios.get(endpoint, { headers, params })
+        .then(response => {
+            const data = response.data;
+            const streams = data.data || [];
 
-                res.status(200).send(streams);
-            });
-        } catch (err) {
+            res.status(200).send(streams);
+        })
+        .catch ((err) => {
             res.status(500).send(err);
-        } 
+        });  
     },
     getStream: async (req, res) => {
         const channelName = req.query.channel;
@@ -53,17 +52,16 @@ const TwitchController = {
             'query': channelName
         };
 
-        try {
-            axios.get(endpoint, { headers, params })
-            .then(response => {
-                const data = response.data;
-                const channels = data.data || [];
+        axios.get(endpoint, { headers, params })
+        .then(response => {
+            const data = response.data;
+            const channels = data.data || [];
 
-                res.status(200).send(channels);
-            });
-        } catch (err) {
+            res.status(200).send(channels);
+        })
+        .catch ((err) =>{
             res.status(500).send(`Error when querying for Twitch channel ${channelName}: ${err}.`);
-        }
+        });
     }
 }
 
