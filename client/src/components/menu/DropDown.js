@@ -5,7 +5,7 @@ const DropDown = ({ options, dropdownName }) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     return (
-        <div className='bg-green-400 flex flex-col'>
+        <div className='flex flex-col'>
             <div className='flex flex-row'>
                 <div>
                     <button 

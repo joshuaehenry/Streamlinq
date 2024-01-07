@@ -3,8 +3,8 @@ import DropDown from './DropDown';
 
 const NavigationBar = () => {
     return (
-        <div className='bg-green-400'>
-        <div className='flex flex-row p-3 justify-between'>
+        <div className=' bg-gradient-to-b from-green-400 to-green-200'>
+        <div className='flex flex-row p-4 justify-between'>
             <div className='flex flex-row space-x-4'>
                 <div>
                     <button className='font-semibold text-lg'>Streamlinq</button>
@@ -33,11 +33,4 @@ const NavigationBar = () => {
     );
 };
 
-/* 
-<div className='grid grid-cols-1 divide-y'>
-                <div>1</div>
-                <div>2</div>
-                <div>3</div>
-            </div>
-*/
 export default NavigationBar;
