@@ -1,13 +1,10 @@
 import logo from './logo.svg';
-import Home from './components/Home';
-import DropDown from './components/DropDown';
+import Home from './components/home/Home';
+import DropDown from './components/menu/DropDown';
 
 function App() {
   return (
     <Home />
-    /*<div className="p-12">
-      <DropDown />
-    </div>*/
   );
 }
 
