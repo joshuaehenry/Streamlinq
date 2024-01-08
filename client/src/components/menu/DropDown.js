@@ -14,7 +14,7 @@ const DropDown = ({ options, dropdownName }) => {
                     >{dropdownName}
                     </button>
                 </div>
-                <div class='items-center pt-1.5 pl-0.5'>
+                <div className='items-center pt-1.5 pl-0.5'>
                     <img src={DownCaret} alt='Caret' className='h-4 w-3'/>
                 </div>
             </div>
@@ -31,7 +31,6 @@ const DropDown = ({ options, dropdownName }) => {
                     </ul>
                 </div>
             }
-            {console.log(options)}
         </div>
     );
 };

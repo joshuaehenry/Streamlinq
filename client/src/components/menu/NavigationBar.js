@@ -21,13 +21,12 @@ const NavigationBar = () => {
                     'Help',
                 ]} dropdownName={'General'}/>
             </div>
-            <div className='flex'>
-                <DropDown options={[
-                    'Linked Accounts',
-                    'Settings',
-                    'Logout'
-                ]} dropdownName={'Account'}/>
-            </div>
+            <DropDown options={[
+                'Linked Accounts',
+                'Settings',
+                'Logout'
+            ]} dropdownName={'Account'}/>
+
         </div>
         </div>
     );

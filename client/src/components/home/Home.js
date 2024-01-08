@@ -8,7 +8,7 @@ const Home = () => {
             <div>
                 <NavigationBar />
             </div>
-            <div className='flex-col w-[15rem] mt-1 ml-1 bg-green-200 shadow-sm'>
+            <div className='flex-col w-[19rem] mt-0.5 ml-0 bg-green-200 shadow-sm'>
                 <LiveBroadcastList />
             </div>
         </div>
