@@ -1,16 +1,10 @@
-import './App.css';
-import NavigationBar from './components/navigationbar';
-import LoginForm from './components/login';
+import logo from './logo.svg';
+import Home from './components/home/Home';
+import DropDown from './components/menu/DropDown';
 
 function App() {
   return (
-    <div className="App" style={{
-      display: 'flex',
-      flexDirection: 'column'
-    }}>
-      <NavigationBar />
-      <LoginForm className="content"/>
-    </div>
+    <Home />
   );
 }
 

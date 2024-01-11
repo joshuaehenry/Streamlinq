@@ -15,6 +15,7 @@ axios.post(process.env.TWITCH_OAUTH_URI, {
 })
 .then(function (response) {
     accessToken = response.data.access_token;
+
     headers = {
         'Client-Id': clientId,
         'Authorization': `Bearer ${ accessToken }`
@@ -25,45 +26,39 @@ axios.post(process.env.TWITCH_OAUTH_URI, {
 });
 
 const TwitchController = {
-    getList: async (req, res) => {
+    getSortedStreams: async (req, res) => {
         const params = {
             'sort': 'viewers',
         };
 
-        const endpoint = apiUrl + process.env.TWITCH_STREAMS_RESOURCE;
+        const endpoint = apiUrl + process.env.TWITCH_STREAMS_RESOURCE + '?first=10';
 
-        try {
-            axios.get(endpoint, { headers, params })
-            .then(response => {
-                const data = response.data;
-                const streams = data.data || [];
+        axios.get(endpoint, { headers, params })
+        .then(response => {
+            const data = response.data;
+            const streams = data.data || [];
 
-                res.status(200).send(streams);
-            });
-        } catch (err) {
+            res.status(200).send(streams);
+        })
+        .catch ((err) => {
             res.status(500).send(err);
-        } 
+        });  
     },
     getStream: async (req, res) => {
-        const channelName = req.query.channel;
-        const endpoint = apiUrl 
-            + process.env.TWITCH_SEARCH_RESOURCE 
-            + process.env.TWITCH_CHANNELS_RESOURCE;
-        const params = {
-            'query': channelName
-        };
+        const userId = req.query.id;
+        const endpoint = `${apiUrl}/users?id=${userId}`;
 
-        try {
-            axios.get(endpoint, { headers, params })
-            .then(response => {
-                const data = response.data;
-                const channels = data.data || [];
+        axios.get(endpoint, { headers })
+        .then(response => {
+            const data = response.data;
+            const channels = data.data || [];
 
-                res.status(200).send(channels);
-            });
-        } catch (err) {
-            res.status(500).send(`Error when querying for Twitch channel ${channelName}: ${err}.`);
-        }
+            res.status(200).send(channels);
+        })
+        .catch ((err) =>{
+            // TODO: Don't justt return 500 -- This gets hit when we get a 404 response from the twitch API.
+            res.status(500).send(`Error when querying for Twitch channel with id ${userId}: ${err}.`);
+        });
     }
 }
 

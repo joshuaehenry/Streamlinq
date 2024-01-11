@@ -23,7 +23,7 @@ const AuthController = {
             }
             
             const token = generateToken(user);
-
+            console.log(token);
             res.cookie('access_token', token, { httpOnly:true, secure: process.env.ENVIRONMENT==='PROD' });
             res.status(200).json({ message: 'User logged in successfully.', token: token });
         } catch (err) {
