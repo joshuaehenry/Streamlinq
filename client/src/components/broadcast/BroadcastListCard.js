@@ -1,12 +1,12 @@
 import React from 'react';
 import liveIcon from '../../images/live_icon.png';
-
-const BroadcastListCard = ({ streamerName, streamTitle, streamCategory, viewCount, streamURL, profileImgURL }) => {
+// 
+const BroadcastListCard = ({ streamerName, streamCategory, viewCount, streamURL, profileImageURL = 'lmfao' }) => {
     return (
         <a href={streamURL} target='_blank'>
         <div className='flex bg-slate-50 justify-between min-w-1 p-1 hover:bg-slate-200'>
             <div className='flex self-center space-x-2'>
-                <img className='self-center rounded-full h-8 w-8 border-2 border-slate-500' src={profileImgURL} alt={streamerName} />
+                <img className='self-center rounded-full h-8 w-8 border-2 border-slate-500' src={profileImageURL} alt={streamerName} />
                 <div className='flex-col'>
                     <div>
                         <span className='text-sm font-semibold'>{streamerName}</span>

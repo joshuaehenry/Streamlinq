@@ -1,66 +1,59 @@
-import { React, useEffect, useState }  from 'react';
+import { React, useEffect, useState, useRef }  from 'react';
 import BroadcastListCard from './BroadcastListCard';
-import axios from 'axios';
+
+import { fetchBroadcasts, fetchProfileImages } from '../../broadcasterApi/twitch';
 
 const LiveBroadcastList = () => {
     const [broadcastList, setBroadcastList] = useState([]);
-
-    const listUrl = "http://localhost:5000/twitch/list";
-    const searchUrl = "http://localhost:5000/twitch/search";
-
-    // Search for the list of live streamers (sorted by view count).
+    const [profileImageURLs, setProfileImageURLs] = useState([]);
+    
     useEffect(() => {
-        axios.get(listUrl)
-        .then(res => {
-            setBroadcastList(appendBroadcasterImages(res.data));
-        })
-        .catch(err => {
-            console.error(err);
-        });
+        const getBroadcasts = async () => {
+            const broadcasts = await fetchBroadcasts();
+            setBroadcastList(broadcasts);
+        }
+        getBroadcasts();
     }, []);
 
-    function appendBroadcasterImages(broadcasts)
+    if (broadcastList.length > 0)
     {
-        /*
-        * Get each broadcaster's profile image url and add them to the broadcastList array.
-        */
-        broadcasts.forEach((broadcast) => {
-            axios.get(`${searchUrl}?id=${broadcast.user_id}`)
-            .then(res => {
-                broadcast['profile_image_url'] = res.data[0].profile_image_url;
-            })
-            .catch(err => {
-                console.error(err);
-            });
-        });
+        const getProfileImages = async(broadcasts) => {
+            const profileImages = await fetchProfileImages(broadcasts);
+            setProfileImageURLs(profileImages);
+        };
 
-        return broadcasts;
-    }
-
-    return (
-        <div>
-            <div className='flex-row items-center text-lg font-semibold'>
-                Live Broadcasts
-            </div>
+        if (profileImageURLs.length == 0)
+        {
+            getProfileImages(broadcastList);
+        }
+        
+        return (
             <div>
-                {broadcastList.map((broadcast, index) => (
-                    
-                    <BroadcastListCard 
-                        streamerName={broadcast.user_name}
-                        streamTitle={broadcast.title}
-                        streamCategory={broadcast.game_name}
-                        viewCount={broadcast.viewer_count}
-                        isLive={broadcast.type}
-                        profileImgURL={broadcast.profile_image_url}
-                        streamURL={'https://twitch.com/' + broadcast.user_name}
-                    />
-                ))}
+                <div className='flex-row items-center text-lg font-semibold'>
+                    Live Broadcasts
+                </div>
+                <div>
+                    {broadcastList.length > 0 && broadcastList.map((broadcast) => (
+                        <BroadcastListCard 
+                            streamerName={broadcast.user_name}
+                            streamCategory={broadcast.game_name}
+                            viewCount={broadcast.viewer_count}
+                            isLive={broadcast.type}
+                            profileImageURL={profileImageURLs[broadcast.user_id]}
+                            streamURL={'https://twitch.com/' + broadcast.user_name}
+                        />
+                    ))}
+                </div>
+                <div className='self-center text-center'>
+                    <a href='#'>More broadcasts...</a>
+                </div>
             </div>
-            <div className='self-center text-center'>
-                <a href='#'>More broadcasts...</a>
-            </div>
-        </div>
-    );
+        );
+    }
+    else
+    {
+        return <div>Loading...</div>
+    }
 };
 
 export default LiveBroadcastList;

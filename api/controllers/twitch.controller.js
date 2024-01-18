@@ -8,22 +8,45 @@ const apiUrl = process.env.TWITCH_URI;
 let accessToken;
 let headers;
 
-axios.post(process.env.TWITCH_OAUTH_URI, {
-    client_id: clientId,
-    client_secret: clientSecret,
-    grant_type: 'client_credentials'
-})
-.then(function (response) {
-    accessToken = response.data.access_token;
+function formatUrl(data)
+{
+    let endpoint = `${apiUrl}/users?id=`;
 
-    headers = {
-        'Client-Id': clientId,
-        'Authorization': `Bearer ${ accessToken }`
-    };
-})
-.catch((err) => {
-    console.error(`Error while getting Twitch OAuth access token: ${err}.`);
-});
+    if (typeof(data) == 'object')
+    {
+        data.forEach((userId, index) => {
+            if (index < data.length - 1)
+                endpoint += `${userId}&id=`;
+            else
+                endpoint += `${userId}`;
+        });
+        return endpoint;
+    }
+
+    return endpoint + data;
+}
+
+const setTokenAndHeaders = async () => {
+    try
+    {
+        const response = await axios.post(process.env.TWITCH_OAUTH_URI, {
+            client_id: clientId,
+            client_secret: clientSecret,
+            grant_type: 'client_credentials'
+        });
+        accessToken = response.data.access_token;
+        headers = {
+            'Client-Id': clientId,
+            'Authorization': `Bearer ${accessToken}`
+        };
+    }   
+    catch (err)
+    {
+        console.error(`Error while getting Twitch OAuth access token: ${err}`);
+    }   
+};
+
+setTokenAndHeaders();
 
 const TwitchController = {
     getSortedStreams: async (req, res) => {
@@ -33,32 +56,32 @@ const TwitchController = {
 
         const endpoint = apiUrl + process.env.TWITCH_STREAMS_RESOURCE + '?first=10';
 
-        axios.get(endpoint, { headers, params })
-        .then(response => {
+        try
+        {
+            const response = await axios.get(endpoint, { headers, params });
             const data = response.data;
             const streams = data.data || [];
 
             res.status(200).send(streams);
-        })
-        .catch ((err) => {
-            res.status(500).send(err);
-        });  
+        }
+        catch
+        {
+            res.status(404).send(err);
+        }
     },
     getStream: async (req, res) => {
-        const userId = req.query.id;
-        const endpoint = `${apiUrl}/users?id=${userId}`;
+        const userIds = req.query.id;
+        let endpoint = formatUrl(userIds);
 
-        axios.get(endpoint, { headers })
-        .then(response => {
-            const data = response.data;
-            const channels = data.data || [];
-
-            res.status(200).send(channels);
-        })
-        .catch ((err) =>{
-            // TODO: Don't justt return 500 -- This gets hit when we get a 404 response from the twitch API.
-            res.status(500).send(`Error when querying for Twitch channel with id ${userId}: ${err}.`);
-        });
+        try
+        {
+            const response = await axios.get(endpoint, { headers });
+            res.status(200).send(response.data);
+        }
+        catch (err)
+        {
+            res.status(404).send(`Error when querying for Twitch channel with id(s) ${userIds}: ${err}.`);
+        }
     }
 }
 
