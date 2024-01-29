@@ -54,7 +54,7 @@ const TwitchController = {
             'sort': 'viewers',
         };
 
-        const endpoint = apiUrl + process.env.TWITCH_STREAMS_RESOURCE + '?first=10';
+        const endpoint = apiUrl + process.env.TWITCH_STREAMS_RESOURCE + '?first=15';
 
         try
         {
