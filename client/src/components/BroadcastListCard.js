@@ -1,5 +1,5 @@
 import React from 'react';
-import liveIcon from '../../images/live_icon.png';
+import liveIcon from '../images/live_icon.png';
 
 const BroadcastListCard = ({ streamerName, streamCategory, viewCount, streamURL, profileImageURL }) => {
 

@@ -24,7 +24,7 @@ const LoginForm = () => {
                     </form>
                 </div>
                 <div className='flex-row mt-3'>
-                    <input className='align-middle' type='checkbox'></input>
+                    <input className='align-middle' type='checkbox' />
                     <label className='align-middle text-sm ml-1' type='text' for='rememberMe'>Remember me</label>
                 </div>
                 <div className='text-center mt-6 pr-5 pl-5 pb-2'>
