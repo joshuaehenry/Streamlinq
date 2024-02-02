@@ -4,6 +4,6 @@ const TwitchController = require('../controllers/twitch.controller');
 
 router.get('/list', TwitchController.getSortedStreams);
 router.get('/users', TwitchController.getStream);
-router.get('/videos', TwitchController.getTrendingVideos);
+router.get('/clips', TwitchController.getClips);
 
 module.exports = router;
