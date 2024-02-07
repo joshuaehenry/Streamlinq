@@ -1,3 +1,4 @@
+const handleErrorResponse = require('../util');
 
 require('dotenv').config();
 const axios = require('axios');
@@ -7,24 +8,9 @@ const apiUrl = process.env.TWITCH_URI;
 
 let accessToken;
 let headers;
-
-function formatUrl(data)
-{
-    let endpoint = `${apiUrl}/users?id=`;
-
-    if (typeof(data) == 'object')
-    {
-        data.forEach((userId, index) => {
-            if (index < data.length - 1)
-                endpoint += `${userId}&id=`;
-            else
-                endpoint += `${userId}`;
-        });
-        return endpoint;
-    }
-
-    return endpoint + data;
-}
+const paramsSerializer = {
+    indexes: null
+};
 
 const setTokenAndHeaders = async () => {
     try
@@ -50,37 +36,76 @@ setTokenAndHeaders();
 
 const TwitchController = {
     getSortedStreams: async (req, res) => {
+        const endpoint = apiUrl + process.env.TWITCH_STREAMS_RESOURCE;
         const params = {
             'sort': 'viewers',
+            'language': 'en',
+            'first': '15',
         };
-
-        const endpoint = apiUrl + process.env.TWITCH_STREAMS_RESOURCE + '?first=10';
-
+        
         try
         {
             const response = await axios.get(endpoint, { headers, params });
             const data = response.data;
             const streams = data.data || [];
 
-            res.status(200).send(streams);
+            return res.status(200).send(streams);
         }
-        catch
+        catch (err)
         {
-            res.status(404).send(err);
+            return handleErrorResponse(res, err);
         }
     },
     getStream: async (req, res) => {
         const userIds = req.query.id;
-        let endpoint = formatUrl(userIds);
-
+        const params = {
+            'id': userIds
+        };
+        const endpoint = apiUrl + process.env.TWITCH_USERS_RESOURCE;
         try
         {
-            const response = await axios.get(endpoint, { headers });
-            res.status(200).send(response.data);
+            const response = await axios.get(endpoint, { headers, params, paramsSerializer });
+            return res.status(200).send(response.data);
         }
         catch (err)
         {
-            res.status(404).send(`Error when querying for Twitch channel with id(s) ${userIds}: ${err}.`);
+            return handleErrorResponse(res, err);
+        }
+    },
+    getClips: async (req, res) => {
+        const broadcasterIds = req.query.broadcaster_id;
+        const gameIds = req.query.game_id;
+        const featured = req.query.featured;
+        const startedAt = req.query.started_at;
+        const endedAt = req.query.ended_at;
+
+        const params = {
+            'game_id': gameIds,
+            'broadcaster_id': broadcasterIds,
+            'is_featured': featured,
+            'started_at': startedAt,
+            'ended_at': endedAt
+        };
+
+        if (!gameIds && !broadcasterIds)
+        {
+            return res.status(400).send({
+                'status': 400,
+                'message': 'game_id or broadcaster_id is required.'
+            });
+        }
+
+        try
+        {
+            const clipsEndpoint = apiUrl + process.env.TWITCH_CLIPS_RESOURCE;
+            const response = await axios.get(clipsEndpoint, { headers, params, paramsSerializer });
+            const data = response.data.data;
+
+            return res.status(200).send(data);
+        }
+        catch (err)
+        {
+            return handleErrorResponse(res, err);
         }
     }
 }

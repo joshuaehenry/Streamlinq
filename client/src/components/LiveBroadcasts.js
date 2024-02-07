@@ -1,7 +1,7 @@
 import { React, useEffect, useState, useRef }  from 'react';
 import BroadcastListCard from './BroadcastListCard';
 
-import { fetchBroadcasts, fetchProfileImages } from '../../broadcasterApi/twitch';
+import { fetchBroadcasts, fetchProfileImages } from '../broadcasterApi/twitch';
 
 const LiveBroadcastList = () => {
     const [broadcastList, setBroadcastList] = useState([]);
