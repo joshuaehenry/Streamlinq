@@ -99,7 +99,7 @@ const TwitchController = {
         {
             const clipsEndpoint = apiUrl + process.env.TWITCH_CLIPS_RESOURCE;
             const response = await axios.get(clipsEndpoint, { headers, params, paramsSerializer });
-            const data = response.data.data;
+            const data = response.data;
 
             return res.status(200).send(data);
         }

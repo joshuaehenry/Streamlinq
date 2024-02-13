@@ -1,5 +1,5 @@
 import { React, useState } from 'react';
-import DownCaret from '../images/arrow.png';
+import DownCaret from '../../images/arrow.png';
 
 const DropDown = ({ options, dropdownName }) => {
     const [isExpanded, setIsExpanded] = useState(false);
