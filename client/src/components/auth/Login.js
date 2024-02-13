@@ -28,7 +28,7 @@ const LoginForm = () => {
                     <label className='align-middle text-sm ml-1' type='text' for='rememberMe'>Remember me</label>
                 </div>
                 <div className='text-center mt-6 pr-5 pl-5 pb-2'>
-                    <button type='button' className='rounded-lg bg-green-300 hover:bg-white shadow-sm p-1 text-m w-full'>Sign Me In</button>
+                    <button type='button' className='rounded-lg bg-green-300 hover:bg-slate-200 shadow-sm p-1 text-m w-full'>Sign Me In</button>
                 </div>
                 <div className='flex justify-between p-2 mt-2'>
                     <div className='p-1 hover:underline'>
